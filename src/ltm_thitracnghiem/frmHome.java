@@ -16,8 +16,10 @@ import java.net.InetAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import object.CauHoi;
+import object.SinhVien;
 
 /**
  *
@@ -35,6 +37,7 @@ public class frmHome extends javax.swing.JFrame {
     ObjectInputStream is;
     ObjectMapper mapper;
     CauHoi question = null;
+    SinhVien sv = null;
 
     /**
      * Creates new form frmHome
@@ -74,7 +77,6 @@ public class frmHome extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         btnDangNhap = new javax.swing.JButton();
         btnDangKy = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
@@ -83,6 +85,7 @@ public class frmHome extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
         cauhoiLabel = new javax.swing.JLabel();
@@ -146,7 +149,7 @@ public class frmHome extends javax.swing.JFrame {
 
         jLabel2.setText("Mã số SV:");
 
-        jLabel4.setText("jLabel4");
+        jLabel4.setText("...");
 
         btnDangNhap.setText("Đăng nhập");
         btnDangNhap.addActionListener(new java.awt.event.ActionListener() {
@@ -166,7 +169,7 @@ public class frmHome extends javax.swing.JFrame {
 
         jLabel3.setText("Số điện thoại:");
 
-        jLabel7.setText("jLabel7");
+        jLabel7.setText("...");
 
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -179,6 +182,8 @@ public class frmHome extends javax.swing.JFrame {
 
         jLabel8.setText("Xem lịch sử thi");
 
+        jLabel9.setText("...");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -189,16 +194,12 @@ public class frmHome extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3))
+                .addGap(21, 21, 21)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel4))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(28, 28, 28)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7))
+                .addGap(81, 81, 81)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,7 +231,7 @@ public class frmHome extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel2)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel9))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel3)
@@ -479,10 +480,15 @@ public class frmHome extends javax.swing.JFrame {
 
     private void dapan4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dapan4ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_dapan4ActionPerformed
 
     private void btnLayBaiThiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLayBaiThiActionPerformed
         // TODO add your handling code here:
+        if(sv == null){
+            JOptionPane.showMessageDialog(null, "Hãy đăng nhập trước khi thi", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         try {
             LayBaiThi();
             Utils.enableAll(jPanel3, true);
@@ -503,13 +509,24 @@ public class frmHome extends javax.swing.JFrame {
 
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
         // TODO add your handling code here:
-        
+        frmDangNhap frmDangNhap = new frmDangNhap(this, true, client, ip, port);
+        frmDangNhap.setVisible(true);
+        frmDangNhap.setAlwaysOnTop(true);
+        if(frmDangNhap.isSucceeded()){
+            sv = frmDangNhap.sv;
+            jLabel4.setText(sv.getHo() + " " + sv.getTen());
+            jLabel7.setText(sv.getSdt());
+            jLabel9.setText(sv.getMaSV());            
+        }
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     private void btnDangKyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangKyActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDangKyActionPerformed
 
+    public void setThongTin(SinhVien sv){
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -565,6 +582,7 @@ public class frmHome extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -573,7 +591,6 @@ public class frmHome extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel timeLabel;
     private javax.swing.JTextArea txtCauHoi;
     // End of variables declaration//GEN-END:variables

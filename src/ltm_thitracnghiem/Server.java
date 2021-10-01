@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import object.CauHoi;
+import object.SinhVien;
 
 /**
  *
@@ -56,6 +57,7 @@ public class Server {
         int cau = 1;
         int diem = 0;
         CauHoi question = null;
+        SinhVien sv = new SinhVien();
                     
         OUTER:
         while (true) {
@@ -112,7 +114,7 @@ public class Server {
                                 Date date = new Date();
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
                                 String dateWithSeconds = simpleDateFormat.format(date);
-                                //db.Update("INSERT INTO DIEM (MASV, NGAYTHI, DIEM) VALUES ('"+maSV+"', '"+dateWithSeconds+"' ,"+diem+")");
+                                db.Update("INSERT INTO DIEM (MASV, NGAYTHI, DIEM) VALUES ('"+sv.getMaSV()+"', '"+dateWithSeconds+"' ,"+diem+")");
                                 ketqua = "success|Điểm tổng kết là: "+diem;
                                 System.out.println(diem);
                                 diem = 0;
@@ -123,6 +125,32 @@ public class Server {
                             ketqua = "information|" + cau;
                         }
                         sendData(ketqua, packet.getAddress(), packet.getPort(), socket);
+                    } catch (SQLException ex) {
+                        sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
+                    }
+                    break;
+                    
+                case "dangnhap": // @author PHONG
+                    packet = getData(socket);
+                    // xu lieu du lieu duoc nhan
+                    String duLieuNhanDuoc = new String( packet.getData(), 0, packet.getLength() );//    1#this game is over
+                    String[] mangDuLieu = duLieuNhanDuoc.split("#");
+                    
+                    String taiKhoan = mangDuLieu[0];
+                    String matKhau = mangDuLieu[1];
+                    
+                    try {
+                        ResultSet rs = db.Query("SELECT * FROM SINHVIEN WHERE UserName = '" + taiKhoan + "' AND PassWord = '" + matKhau + "'");
+                        if( rs.next() )
+                        {
+                            sv.setMaSV(rs.getString("MASV"));
+                            sv.setHo(rs.getString("HO"));
+                            sv.setTen(rs.getString("TEN"));
+                            sv.setSdt(rs.getString("SODIENTHOAI"));
+                            sendData(mapper.writeValueAsString(sv), packet.getAddress(), packet.getPort(), socket);
+                        }else{
+                            sendData("Tài khoản đăng nhập không tồn tại", packet.getAddress(), packet.getPort(), socket);
+                        }
                     } catch (SQLException ex) {
                         sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
                     }

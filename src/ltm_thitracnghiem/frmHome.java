@@ -486,6 +486,7 @@ public class frmHome extends javax.swing.JFrame {
         try {
             LayBaiThi();
             Utils.enableAll(jPanel3, true);
+            Utils.enableAll(jPanel4, true);
             btnLayBaiThi.setEnabled(false);
             btnSubmit.setEnabled(true);
             cauhoiLabel.setText("Câu hỏi: 1/20");

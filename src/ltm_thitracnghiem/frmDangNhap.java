@@ -17,7 +17,7 @@ import object.SinhVien;
 
 /**
  *
- * @author ngdanghau
+ * @author Phong Virus
  */
 public class frmDangNhap extends javax.swing.JDialog {
     private DatagramSocket client;
@@ -72,6 +72,7 @@ public class frmDangNhap extends javax.swing.JDialog {
         txtPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Đăng nhập thông tin sinh viên");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Đăng nhập");

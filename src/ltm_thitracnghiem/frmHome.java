@@ -268,11 +268,6 @@ public class frmHome extends javax.swing.JFrame {
         buttonGroup1.add(dapan4);
         dapan4.setText("D: đáp án D");
         dapan4.setEnabled(false);
-        dapan4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dapan4ActionPerformed(evt);
-            }
-        });
 
         buttonGroup1.add(dapan3);
         dapan3.setText("C: đáp án C");
@@ -455,7 +450,10 @@ public class frmHome extends javax.swing.JFrame {
         String ketqua = new String(packet.getData());
         if(ketqua.contains("success")){
             JOptionPane.showMessageDialog(null, ketqua.replace("success|", ""));
+            Utils.enableAll(jPanel3, false);
+            Utils.enableAll(jPanel4, false);
             btnLayBaiThi.setEnabled(true);
+            scheduler.shutdown();
             return false;
         }else if(ketqua.contains("information")){
             cauhoiLabel.setText("Câu hỏi: " + ketqua.replace("information|", "") +"/10");
@@ -477,11 +475,6 @@ public class frmHome extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
-
-    private void dapan4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dapan4ActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_dapan4ActionPerformed
 
     private void btnLayBaiThiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLayBaiThiActionPerformed
         // TODO add your handling code here:
@@ -522,6 +515,9 @@ public class frmHome extends javax.swing.JFrame {
 
     private void btnDangKyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangKyActionPerformed
         // TODO add your handling code here:
+        frmDangKy frmDangKy = new frmDangKy(client, ip, port);
+        frmDangKy.setVisible(true);
+        frmDangKy.setAlwaysOnTop(true);
     }//GEN-LAST:event_btnDangKyActionPerformed
 
     public void setThongTin(SinhVien sv){

@@ -155,6 +155,55 @@ public class Server {
                         sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
                     }
                     break;
+                case "dangky":// @author PHONG
+                    packet = getData(socket);
+                    
+                     // xu lieu du lieu duoc nhan
+                    String duLieuNhanDuocTuDangKy = new String( packet.getData(), 0, packet.getLength() );
+                    String[] mangDuLieuNhanDuoc = duLieuNhanDuocTuDangKy.split("#");
+                    
+                    // lay du lieu ra ngoai
+                    String maSinhVien = mangDuLieuNhanDuoc[0];
+                    String ho = mangDuLieuNhanDuoc[1];
+                    String ten = mangDuLieuNhanDuoc[2];
+                    String soDienThoai = mangDuLieuNhanDuoc[3];
+                    String matKhauDangKy = mangDuLieuNhanDuoc[4];
+                    String matKhauXacNhan = mangDuLieuNhanDuoc[5];
+                    
+                    if(!matKhauDangKy.equals(matKhauXacNhan)){
+                        sendData("not_match", packet.getAddress(), packet.getPort(), socket);
+                        break;
+                    }
+                    try {
+                        //kiem tra xem ma nhan vien co bi trung - neu trung thi dung lai luon
+                        ResultSet rs = db.Query("SELECT * FROM SINHVIEN WHERE MASV = '" + maSinhVien + "'");
+                        if( rs.next() )
+                        {
+                            sendData("duplicate_masv", packet.getAddress(), packet.getPort(), socket);
+                            break;
+                        }
+                    } catch (SQLException ex) {
+                        sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
+                    }
+                    
+                    try {
+                        //kiem tra xem ma nhan vien co bi trung - neu trung thi dung lai luon
+                        ResultSet rs = db.Query("SELECT * FROM SINHVIEN WHERE SODIENTHOAI = '" + soDienThoai +"'");
+                        if( rs.next() )
+                        {
+                            sendData("duplicate_sdt", packet.getAddress(), packet.getPort(), socket);
+                            break;
+                        }
+                    } catch (SQLException ex) {
+                        sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
+                    }
+                     
+                    // neu ma sinh vien khong bi trung thi tiep tuc them moi vao co so du lieu
+                    String cauTruyVan = "INSERT INTO SINHVIEN( MASV, HO, TEN, SODIENTHOAI, USERNAME, PASSWORD) "
+                        + "VALUES( '" + maSinhVien + "' , '"+ho+"', '"+ten+"', '"+ soDienThoai +"', '"+ maSinhVien +"' , '"+matKhauDangKy+"')";
+                    db.Query(cauTruyVan);
+                    sendData("success", packet.getAddress(), packet.getPort(), socket);
+                    break;
                 case "QUIT":
                     break OUTER;
             }

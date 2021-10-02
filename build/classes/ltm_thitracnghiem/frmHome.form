@@ -407,9 +407,6 @@
                 <Property name="text" type="java.lang.String" value="D: &#x111;&#xe1;p &#xe1;n D"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dapan4ActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="dapan3">
               <Properties>

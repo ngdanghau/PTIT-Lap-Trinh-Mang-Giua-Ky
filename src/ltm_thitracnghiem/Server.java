@@ -17,8 +17,11 @@ import java.net.SocketException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import object.CauHoi;
+import object.Diem;
 import object.SinhVien;
 
 /**
@@ -129,7 +132,24 @@ public class Server {
                         sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
                     }
                     break;
+                case "laydiemthi":
+                    try {
+                        ArrayList<Diem> list = new ArrayList<Diem>();
+                        ResultSet rs = db.Query("SELECT * FROM DIEM WHERE MASV = '" + sv.getMaSV() + "'");
+                        while( rs.next() )
+                        {
+                            Diem item = new Diem();
+                            item.setMaSV(rs.getString("MASV"));
+                            item.setNgaythi(rs.getString("NGAYTHI"));
+                            item.setDiem(rs.getFloat("DIEM"));
+                            list.add(item);
+                        }
+                        sendData(mapper.writeValueAsString(list), packet.getAddress(), packet.getPort(), socket);
+                    } catch (SQLException ex) {
+                        sendData(ex.getMessage(), packet.getAddress(), packet.getPort(), socket);
+                    }
                     
+                    break;
                 case "dangnhap": // @author PHONG
                     packet = getData(socket);
                     // xu lieu du lieu duoc nhan

@@ -5,7 +5,6 @@
  */
 package ltm_thitracnghiem;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
@@ -14,16 +13,11 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import object.CauHoi;
-import object.Diem;
 import object.SinhVien;
 
 /**
@@ -35,7 +29,6 @@ public class frmHome extends javax.swing.JFrame {
     DatagramSocket client;
     InetAddress ip;
     int port;
-    private int macauhoi;
     ScheduledExecutorService scheduler;
     DatagramPacket packet;
     ByteArrayInputStream in;
@@ -43,6 +36,7 @@ public class frmHome extends javax.swing.JFrame {
     ObjectMapper mapper;
     CauHoi question = null;
     SinhVien sv = null;
+    int countdownStarter = 30;
 
     /**
      * Creates new form frmHome
@@ -399,9 +393,8 @@ public class frmHome extends javax.swing.JFrame {
         
         scheduler = Executors.newScheduledThreadPool(1);
         final Runnable runnable = new Runnable() {
-            int countdownStarter = 30;
             public void run() {
-                if(countdownStarter < 6){
+                if(countdownStarter < 10){
                     timeLabel.setForeground(Color.RED);
                 }else{
                     timeLabel.setForeground(Color.BLACK);
@@ -417,14 +410,19 @@ public class frmHome extends javax.swing.JFrame {
                             countdownStarter = 30;
                             return;
                         }
-                        LayBaiThi();
                     }catch(Exception ex){
                         scheduler.shutdown();
                         countdownStarter = 30;
                         return;
                     }
+                    
                     countdownStarter = 30;
                     scheduler.shutdown();
+                    try{
+                        LayBaiThi();
+                    }catch(Exception ex){
+                        return;
+                    }
                 }
             }
         };
@@ -456,9 +454,12 @@ public class frmHome extends javax.swing.JFrame {
             Utils.enableAll(jPanel4, false);
             btnLayBaiThi.setEnabled(true);
             scheduler.shutdown();
+            countdownStarter = 30;
             return false;
         }else if(ketqua.contains("information")){
             cauhoiLabel.setText("Câu hỏi: " + ketqua.replace("information|", "") +"/10");
+            scheduler.shutdown();
+            countdownStarter = 30;
         }else{
             JOptionPane.showMessageDialog(null, ketqua, "Lỗi", JOptionPane.ERROR_MESSAGE);
             btnLayBaiThi.setEnabled(true);

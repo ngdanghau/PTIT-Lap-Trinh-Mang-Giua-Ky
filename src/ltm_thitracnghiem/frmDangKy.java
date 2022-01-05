@@ -273,6 +273,10 @@ public class frmDangKy extends javax.swing.JFrame {
                 {
                     JOptionPane.showMessageDialog(rootPane, "Mật khẩu xác nhận không khớp !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 }
+                else if ( result.equals("error"))
+                {
+                    JOptionPane.showMessageDialog(rootPane, "Lỗi đăng ký !", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
                 else
                 {
                     JOptionPane.showMessageDialog(rootPane, "Đăng ký thất bại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);

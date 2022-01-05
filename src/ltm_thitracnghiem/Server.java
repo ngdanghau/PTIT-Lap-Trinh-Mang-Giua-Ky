@@ -19,7 +19,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import object.CauHoi;
 import object.Diem;
 import object.SinhVien;
@@ -221,7 +220,11 @@ public class Server {
                     // neu ma sinh vien khong bi trung thi tiep tuc them moi vao co so du lieu
                     String cauTruyVan = "INSERT INTO SINHVIEN( MASV, HO, TEN, SODIENTHOAI, USERNAME, PASSWORD) "
                         + "VALUES( '" + maSinhVien + "' , '"+ho+"', '"+ten+"', '"+ soDienThoai +"', '"+ maSinhVien +"' , '"+matKhauDangKy+"')";
-                    db.Query(cauTruyVan);
+                    int kq = db.Update(cauTruyVan);
+                    if(kq == -1){
+                        sendData("error", packet.getAddress(), packet.getPort(), socket);
+                        break;
+                    }
                     sendData("success", packet.getAddress(), packet.getPort(), socket);
                     break;
                 case "QUIT":
